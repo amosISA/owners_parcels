@@ -19,7 +19,7 @@ class Propietario(models.Model):
         verbose_name_plural = "Propietarios"
 
     def __unicode__(self):
-        return '{}'.format(self.nombre)
+        return '{}, {}'.format(self.apellidos, self.nombre)
 
 class SectorTrabajo(models.Model):
     sector = models.CharField(max_length=250, blank=False)

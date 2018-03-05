@@ -7,8 +7,8 @@ from .models import Parcela, Propietario, SectorTrabajo
 
 # Register your models here.
 class ParcelaAdmin(admin.ModelAdmin):
-    list_display = ['propietario', 'metros_cuadrados', 'poligono',
-                    'numero_parcela', 'autorizacion']
+    list_display = ['numero_parcela', 'propietario', 'metros_cuadrados',
+                    'poligono', 'autorizacion']
     list_filter = ['propietario__nombre', 'metros_cuadrados', 'poligono',
                     'numero_parcela', 'autorizacion']
     search_fields = ('propietario__nombre', 'metros_cuadrados', 'poligono',

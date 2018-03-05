@@ -20,6 +20,7 @@ from django.contrib import admin
 
 urlpatterns = [
     url(r'^panel/', admin.site.urls),
+    url(r'^', include('parcels.urls', namespace='parcels')),
 ]
 
 if settings.DEBUG:
