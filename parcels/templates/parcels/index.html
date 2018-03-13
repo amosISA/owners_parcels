@@ -21,6 +21,7 @@
                 <tr>
                     <td>{{ parcela.poligono }}</td>
                     <td>
+                        <input class="parcela-google-maps-checkbox" type="checkbox" data-parcela="{{ parcela.numero_parcela }}" data-poligono="{{ parcela.poligono }}">
                         <a class="parcela-google-maps" data-parcela="{{ parcela.numero_parcela }}" data-poligono="{{ parcela.poligono }}" href="#" data-toggle="modal" data-target="#myModal">
                             {{ parcela.numero_parcela }}
                         </a>
@@ -71,27 +72,45 @@
         } );
 
         function pad (str, max) {
-          str = str.toString();
-          return str.length < max ? pad("0" + str, max) : str;
+            str = str.toString();
+            return str.length < max ? pad("0" + str, max) : str;
         }
 
         var map;
-        $('.parcela-google-maps').click(function() {
-            //'https://ovc.catastro.meh.es/Cartografia/WMS/BuscarParcelaGoogle3D.aspx?refcat=03127A'+ polig.pad(2) + parc.pad(4) + '0000BP&del=3&mun=127&tipo=3d'
+
+        $('.parcela-google-maps-checkbox').click(function(){
             var polig = parseInt($(this).attr('data-poligono'));
             var parc = parseInt($(this).attr('data-parcela'));
 
             var kmlLayer = new google.maps.KmlLayer({
                 url: 'https://ovc.catastro.meh.es/Cartografia/WMS/BuscarParcelaGoogle3D.aspx?refcat=03127A'+ pad(polig, 3) + pad(parc, 5) + '0000BP&del=3&mun=127&tipo=3d',
-                suppressInfoWindows: false,
-                map:map
+                suppressInfoWindows: false
             });
-            console.log(kmlLayer);
+            //if(!kmlLayer.getMap()){kmlLayer.setMap(map);}else{kmlLayer.setMap(null);}
+
+            if($(this).is(':checked')) {
+                kmlLayer.setMap(map);
+                $('#myModal').modal();
+            } else {
+                kmlLayer.setMap(null);
+            }
         });
+
+        // $('.parcela-google-maps').click(function() {
+        //     var polig = parseInt($(this).attr('data-poligono'));
+        //     var parc = parseInt($(this).attr('data-parcela'));
+        //
+        //     kmlLayer = new google.maps.KmlLayer({
+        //         url: 'https://ovc.catastro.meh.es/Cartografia/WMS/BuscarParcelaGoogle3D.aspx?refcat=03127A'+ pad(polig, 3) + pad(parc, 5) + '0000BP&del=3&mun=127&tipo=3d',
+        //         suppressInfoWindows: false,
+        //         map: map
+        //     });
+        //     //console.log(kmlLayer);
+        // });
 
         function initialize(){
             var myOptions = {
-                zoom: 5,
+                zoom: 100,
                 mapTypeId: google.maps.MapTypeId.SATELLITE
             };
             map = new google.maps.Map(document.getElementById('map_canvas'), myOptions);
