@@ -5,6 +5,7 @@
 <table id="tabla_parcelas" class="table table-striped table-bordered" cellspacing="0" width="100%">
         <thead>
             <tr>
+                <th>Polígono</th>
                 <th>Parcela</th>
                 <th>Apellidos y Nombre</th>
                 <th>NIF</th>
@@ -18,8 +19,9 @@
         <tbody>
             {% for parcela in parcelas %}
                 <tr>
+                    <td>{{ parcela.poligono }}</td>
                     <td>
-                        <a href="#" data-toggle="modal" data-target="#myModal">
+                        <a class="parcela-google-maps" data-parcela="{{ parcela.numero_parcela }}" data-poligono="{{ parcela.poligono }}" href="#" data-toggle="modal" data-target="#myModal">
                             {{ parcela.numero_parcela }}
                         </a>
                     </td>
@@ -60,8 +62,41 @@
             $('#tabla_parcelas').DataTable({
                 "language": {
                     url: "/static/parcels/location/es_ES.json"
-                },
+                }
             });
+
+            // Number.prototype.pad = function(n) {
+            //     return new Array(n).join('0').slice((n || 2) * -1) + this;
+            // };
         } );
+
+        function pad (str, max) {
+          str = str.toString();
+          return str.length < max ? pad("0" + str, max) : str;
+        }
+
+        var map;
+        $('.parcela-google-maps').click(function() {
+            //'https://ovc.catastro.meh.es/Cartografia/WMS/BuscarParcelaGoogle3D.aspx?refcat=03127A'+ polig.pad(2) + parc.pad(4) + '0000BP&del=3&mun=127&tipo=3d'
+            var polig = parseInt($(this).attr('data-poligono'));
+            var parc = parseInt($(this).attr('data-parcela'));
+
+            var kmlLayer = new google.maps.KmlLayer({
+                url: 'https://ovc.catastro.meh.es/Cartografia/WMS/BuscarParcelaGoogle3D.aspx?refcat=03127A'+ pad(polig, 3) + pad(parc, 5) + '0000BP&del=3&mun=127&tipo=3d',
+                suppressInfoWindows: false,
+                map:map
+            });
+            console.log(kmlLayer);
+        });
+
+        function initialize(){
+            var myOptions = {
+                zoom: 5,
+                mapTypeId: google.maps.MapTypeId.SATELLITE
+            };
+            map = new google.maps.Map(document.getElementById('map_canvas'), myOptions);
+        }
+
+        google.maps.event.addDomListener(window, 'load', initialize);
     </script>
 {% endblock %}
