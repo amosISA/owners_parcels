@@ -1,0 +1,13 @@
+body .parcels_webapp_container {
+    margin-top: 20px;
+    margin-bottom:20px;
+}
+
+body #map_canvas {
+    width:640px;
+    height: 480px;
+}
+
+body .modal-content {
+    width: 640px;
+}

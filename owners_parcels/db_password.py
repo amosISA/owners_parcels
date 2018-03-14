@@ -1,1 +1,1 @@
-DBPASS = 'owners_parcels'
+DBPASS = 'amos'
