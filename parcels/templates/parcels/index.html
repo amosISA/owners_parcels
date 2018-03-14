@@ -2,59 +2,31 @@
 
 {% block content %}
 
-<table id="tabla_parcelas" class="table table-striped table-bordered" cellspacing="0" width="100%">
-        <thead>
-            <tr>
-                <th>Polígono</th>
-                <th>Parcela</th>
-                <th>Apellidos y Nombre</th>
-                <th>NIF</th>
-                <th>Domicilio</th>
-                <th>Teléfono</th>
-                <th>m2</th>
-                <th>Sector de Trabajo</th>
-                <th>Autorización</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for parcela in parcelas %}
-                <tr>
-                    <td>{{ parcela.poligono }}</td>
-                    <td>
-                        <input class="parcela-google-maps-checkbox" type="checkbox" data-parcela="{{ parcela.numero_parcela }}" data-poligono="{{ parcela.poligono }}">
-                        <a class="parcela-google-maps" data-parcela="{{ parcela.numero_parcela }}" data-poligono="{{ parcela.poligono }}" href="#" data-toggle="modal" data-target="#myModal">
-                            {{ parcela.numero_parcela }}
-                        </a>
-                    </td>
-                    <td>{{ parcela.propietario }}</td>
-                    <td>{{ parcela.propietario.nif }}</td>
-                    <td>{{ parcela.propietario.domicilio }}</td>
-                    <td>{{ parcela.propietario.telefono_movil }}</td>
-                    <td>{{ parcela.metros_cuadrados }}</td>
-                    <td>
-                        {% for sector in parcela.sector_trabajo.all %}
-                            {{ sector }}
-                        {% endfor %}
-                    </td>
-                    <td>
-                        {% if autorizacion %}
-                            Permiso concedido
-                        {% endif %}
-                    </td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-
-    <!-- Modal for google Maps -->
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div id="map_canvas" class="modal-body">
-                </div>
-            </div>
-        </div>
+<div class="row">
+    <div class="col-md-9" id="map_canvas">
     </div>
+    <div class="col-md-3">
+        <table width="100%">
+            <thead>
+                <tr>
+                    <th>Polígono</th>
+                    <th>Parcela</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for parcela in parcelas %}
+                    <tr>
+                        <td>{{ parcela.poligono }}</td>
+                        <td>
+                            <input class="parcela-google-maps-checkbox" type="checkbox" data-parcela="{{ parcela.numero_parcela }}" data-poligono="{{ parcela.poligono }}">
+                            {{ parcela.numero_parcela }}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
 {% endblock %}
 
 {% block js %}
@@ -65,10 +37,6 @@
                     url: "/static/parcels/location/es_ES.json"
                 }
             });
-
-            // Number.prototype.pad = function(n) {
-            //     return new Array(n).join('0').slice((n || 2) * -1) + this;
-            // };
         } );
 
         function pad (str, max) {
@@ -76,41 +44,37 @@
             return str.length < max ? pad("0" + str, max) : str;
         }
 
+        var layers = [];
         var map;
 
-        $('.parcela-google-maps-checkbox').click(function(){
+        $('.parcela-google-maps-checkbox').change(function(){
             var polig = parseInt($(this).attr('data-poligono'));
             var parc = parseInt($(this).attr('data-parcela'));
-
-            var kmlLayer = new google.maps.KmlLayer({
-                url: 'https://ovc.catastro.meh.es/Cartografia/WMS/BuscarParcelaGoogle3D.aspx?refcat=03127A'+ pad(polig, 3) + pad(parc, 5) + '0000BP&del=3&mun=127&tipo=3d',
-                suppressInfoWindows: false
-            });
-            //if(!kmlLayer.getMap()){kmlLayer.setMap(map);}else{kmlLayer.setMap(null);}
-
             if($(this).is(':checked')) {
-                kmlLayer.setMap(map);
-                $('#myModal').modal();
+                layers[parc] = new google.maps.KmlLayer({
+                    url: 'https://ovc.catastro.meh.es/Cartografia/WMS/BuscarParcelaGoogle3D.aspx?refcat=03127A'+ pad(polig, 3) + pad(parc, 5) + '0000BP&del=3&mun=127&tipo=3d',
+                    suppressInfoWindows: false
+                    //preserveViewport: true
+                });
+
+                if (layers[parc].getMap() == null) {
+                    layers[parc].setMap(map);
+                } else {
+                    layers[parc].setMap(null);
+                }
             } else {
-                kmlLayer.setMap(null);
+                if (layers[parc].getMap() == null) {
+                    layers[parc].setMap(map);
+                } else {
+                    layers[parc].setMap(null);
+                }
             }
         });
 
-        // $('.parcela-google-maps').click(function() {
-        //     var polig = parseInt($(this).attr('data-poligono'));
-        //     var parc = parseInt($(this).attr('data-parcela'));
-        //
-        //     kmlLayer = new google.maps.KmlLayer({
-        //         url: 'https://ovc.catastro.meh.es/Cartografia/WMS/BuscarParcelaGoogle3D.aspx?refcat=03127A'+ pad(polig, 3) + pad(parc, 5) + '0000BP&del=3&mun=127&tipo=3d',
-        //         suppressInfoWindows: false,
-        //         map: map
-        //     });
-        //     //console.log(kmlLayer);
-        // });
-
         function initialize(){
             var myOptions = {
-                zoom: 100,
+                zoom: 11,
+                center: {lat: 38.691351, lng: -0.100658},
                 mapTypeId: google.maps.MapTypeId.SATELLITE
             };
             map = new google.maps.Map(document.getElementById('map_canvas'), myOptions);
