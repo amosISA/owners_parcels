@@ -1,13 +1,28 @@
-body .parcels_webapp_container {
-    margin-top: 20px;
-    margin-bottom:20px;
-}
-
-body #map_canvas {
-    width:640px;
-    height: 480px;
-}
-
-body .modal-content {
+/*** Body ***/
+/************/
+body {
+  font-size: 0.8rem; }
+  body .parcels_webapp_container {
+    margin-top: 10px;
+    margin-bottom: 20px; }
+  body #map_canvas {
     width: 640px;
-}
+    height: 480px; }
+  body .form-check-parcel {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 3px;
+    font-size: 0.8rem; }
+    body .form-check-parcel .form-parcel-input {
+      margin-right: 5px; }
+      body .form-check-parcel .form-parcel-input label {
+        display: block;
+        margin-bottom: 0; }
+  body .card ul {
+    margin: 0;
+    padding: 0; }
+    body .card ul li {
+      list-style-type: none;
+      text-align: left; }
+
+/*# sourceMappingURL=base.css.map */
