@@ -23,8 +23,36 @@ class Propietario(models.Model):
     def __unicode__(self):
         return '{}, {}'.format(self.apellidos, self.nombre)
 
+class Estado(models.Model):
+    nombre = models.CharField(max_length=250, blank=False)
+
+    class Meta:
+        ordering = ["nombre"]
+
+    def __unicode__(self):
+        return '{}'.format(self.nombre)
+
+class Parcela(models.Model):
+    propietario = models.ForeignKey(Propietario, default=None, blank=True, null=True)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+    metros_cuadrados = models.CharField(max_length=250, blank=True)
+    poligono = models.CharField(max_length=250, blank=True)
+    numero_parcela = models.CharField(max_length=250, blank=True)
+    estado = models.ManyToManyField(Estado, blank=True)
+    comentarios = models.TextField(blank=True)
+
+    class Meta:
+        ordering = ["-created"]
+        verbose_name = 'Parcela'
+        verbose_name_plural = "Parcelas"
+
+    def __unicode__(self):
+        return '{}'.format(self.numero_parcela)
+
 class SectorTrabajo(models.Model):
     sector = models.CharField(max_length=250, blank=False)
+    parcela = models.ManyToManyField(Parcela, blank=True)
 
     class Meta:
         ordering = ["sector"]
@@ -36,6 +64,7 @@ class SectorTrabajo(models.Model):
 
 class Proyecto(models.Model):
     nombre = models.CharField(max_length=250, blank=False)
+    sector_trabajo = models.ManyToManyField(SectorTrabajo, blank=True)
     descripcion = models.TextField(blank=True)
     comentarios = models.TextField(blank=True)
 
@@ -44,33 +73,4 @@ class Proyecto(models.Model):
 
     def __unicode__(self):
         return '{}'.format(self.nombre)
-
-class Estado(models.Model):
-    nombre = models.CharField(max_length=250, blank=False)
-
-    class Meta:
-        ordering = ["nombre"]
-
-    def __unicode__(self):
-        return '{}'.format(self.nombre)
-
-class Parcela(models.Model):
-    propietario = models.ForeignKey(Propietario, on_delete=models.CASCADE, default=None, blank=True, null=True)
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
-    metros_cuadrados = models.CharField(max_length=250, blank=True)
-    poligono = models.CharField(max_length=250, blank=True)
-    numero_parcela = models.CharField(max_length=250, blank=True)
-    proyecto = models.ManyToManyField(Proyecto, blank=True)
-    sector_trabajo = models.ManyToManyField(SectorTrabajo, blank=True)
-    estado = models.ManyToManyField(Estado, blank=True)
-    comentarios = models.TextField(blank=True)
-
-    class Meta:
-        ordering = ["-created"]
-        verbose_name = 'Parcela'
-        verbose_name_plural = "Parcelas"
-
-    def __unicode__(self):
-        return '{}'.format(self.numero_parcela)
 

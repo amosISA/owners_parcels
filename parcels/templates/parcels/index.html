@@ -29,9 +29,19 @@
                 <ul>
                     {% for proyecto in proyectos %}
                         <li>
-                            <a href="">
+                            <a class="project-name" data-id="{{ proyecto.id }}" href="#">
                                 - {{ proyecto.nombre }}
                             </a>
+                            <ul>
+                                {% for sector in proyecto.sector_trabajo.all %}
+                                    <li>{{ sector }}</li>
+                                    <ul>
+                                        {% for parcela in sector.parcela.all %}
+                                            <li>{{ parcela }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endfor %}
+                            </ul>
                         </li>
                     {% endfor %}
                 </ul>
@@ -71,6 +81,21 @@
                 "language": {
                     url: "/static/parcels/location/es_ES.json"
                 }
+            });
+
+            /****** AJAX FOR RIGHT SIDE *****/
+            $('.card .project-name').click(function() {
+                $.ajax({
+                    method: 'GET',
+                    url: '{% url "parcels:ajax_get_sectores" %}',
+                    data: {
+                        'proyecto': $(this).attr('data-id')
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        console.log(data);
+                    }
+                });
             });
         } );
 
@@ -137,9 +162,5 @@
         }
 
         google.maps.event.addDomListener(window, 'load', initialize);
-
-
-        /****** AJAX FOR RIGHT SIDE *****/
-        
     </script>
 {% endblock %}

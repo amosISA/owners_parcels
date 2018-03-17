@@ -19,4 +19,5 @@ from . import views
 
 urlpatterns = [
     url(r'^$', views.index, name='index'),
+    url(r'^ajaxsectores/$', views.ajax_get_sectores, name='ajax_get_sectores'),
 ]

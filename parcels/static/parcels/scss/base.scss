@@ -38,6 +38,10 @@ body {
   }
 
   .card {
+    font-size: 0.8rem!important;
+    height: 480px;
+    overflow: auto;
+    
     ul {
       margin: 0;
       padding: 0;

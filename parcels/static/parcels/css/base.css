@@ -18,11 +18,15 @@ body {
       body .form-check-parcel .form-parcel-input label {
         display: block;
         margin-bottom: 0; }
-  body .card ul {
-    margin: 0;
-    padding: 0; }
-    body .card ul li {
-      list-style-type: none;
-      text-align: left; }
+  body .card {
+    font-size: 0.8rem !important;
+    height: 480px;
+    overflow: auto; }
+    body .card ul {
+      margin: 0;
+      padding: 0; }
+      body .card ul li {
+        list-style-type: none;
+        text-align: left; }
 
 /*# sourceMappingURL=base.css.map */
