@@ -84,16 +84,49 @@
             });
 
             /****** AJAX FOR RIGHT SIDE *****/
-            $('.card .project-name').click(function() {
+            // If i dont do it by on, this wont work, the on is for future elements,
+            // this is: proj-breadcrumb anchors created after in card for clicking callback
+            // WHEN YOU CLICK ON PROJECTS ON BREADCRUMBS
+            var card = $('.card');
+            card.on("click", ".proj-breadcrumb", function() {
+                $.ajax({
+                    method: 'GET',
+                    url: '{% url "parcels:ajax_get_proyectos" %}',
+                    data: {
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        var success_div = $('.card .card-header');
+                        var li_proj;
+                        success_div.html('');
+                        success_div.html('<ol class="breadcrumb">' +
+                                            '<li class="breadcrumb-item active">Proyectos</li>' +
+                                         '</ol>');
+
+                        $.each(data, function(key, value) {
+                            success_div.append('<li><a class="project-name" data-id="' + value.pk + '" href="#">' + value.fields['nombre'] + '</a></li>');
+                        });
+                    }
+                });
+            });
+
+            // WHEN YOU CLICK ON EACH PROJECTS TO SWITCH TO SECTORES
+            card.on('click', '.project-name', function() {
                 $.ajax({
                     method: 'GET',
                     url: '{% url "parcels:ajax_get_sectores" %}',
                     data: {
-                        'proyecto': $(this).attr('data-id')
+                        'project_name': $(this).attr('data-id')
                     },
                     dataType: 'json',
                     success: function (data) {
-                        console.log(data);
+                        var success_div = $('.card .card-header');
+                        success_div.html('');
+                        success_div.html('<ol class="breadcrumb"><li class="breadcrumb-item"><a href="#" class="proj-breadcrumb">Proyectos</a></li><li class="breadcrumb-item active">Sectores</li></ol>');
+
+                        $.each(data, function(key, value) {
+                            success_div.append('<li><a href="#">' + value.fields['sector'] + '</a></li>');
+                        });
                     }
                 });
             });
