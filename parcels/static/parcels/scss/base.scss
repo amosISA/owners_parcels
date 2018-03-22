@@ -39,8 +39,6 @@ body {
 
   .card {
     font-size: 0.8rem!important;
-    height: 480px;
-    overflow: auto;
 
     ul {
       margin: 0;
@@ -50,5 +48,16 @@ body {
         text-align: left;
       }
     }
+
+    .card-header {
+      height: 480px;
+      overflow: auto;
+    }
+  }
+
+  // Button download KML
+  .row-button-download {
+    padding-right: 0;
+    button {float: right;}
   }
 }

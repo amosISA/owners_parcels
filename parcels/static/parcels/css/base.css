@@ -19,14 +19,19 @@ body {
         display: block;
         margin-bottom: 0; }
   body .card {
-    font-size: 0.8rem !important;
-    height: 480px;
-    overflow: auto; }
+    font-size: 0.8rem !important; }
     body .card ul {
       margin: 0;
       padding: 0; }
       body .card ul li {
         list-style-type: none;
         text-align: left; }
+    body .card .card-header {
+      height: 480px;
+      overflow: auto; }
+  body .row-button-download {
+    padding-right: 0; }
+    body .row-button-download button {
+      float: right; }
 
 /*# sourceMappingURL=base.css.map */

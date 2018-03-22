@@ -32,44 +32,17 @@
                             <a class="project-name" data-id="{{ proyecto.id }}" href="#">
                                 - {{ proyecto.nombre }}
                             </a>
-                            <ul>
-                                {% for sector in proyecto.sector_trabajo.all %}
-                                    <li>{{ sector }}</li>
-                                    <ul>
-                                        {% for parcela in sector.parcela.all %}
-                                            <li>{{ parcela }}</li>
-                                        {% endfor %}
-                                    </ul>
-                                {% endfor %}
-                            </ul>
                         </li>
                     {% endfor %}
                 </ul>
             </div>
-            <div class="parcels-list">
-
-            </div>
         </div>
+    </div>
+</div>
 
-        <table width="100%">
-            <thead>
-                <tr>
-                    <!--<th>Polígono</th>
-                    <th>Parcela</th>-->
-                </tr>
-            </thead>
-            <tbody>
-                {% for parcela in parcelas %}
-                    <tr>
-                        <td>{{ parcela.poligono }}</td>
-                        <td>
-                            <input class="parcela-google-maps-checkbox" type="checkbox" data-parcela="{{ parcela.numero_parcela }}" data-poligono="{{ parcela.poligono }}">
-                            {{ parcela.numero_parcela }}
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+<div class="row">
+    <div class="col-md-9 row-button-download">
+        <button class="button-kml-download">Descargar KML</button>
     </div>
 </div>
 {% endblock %}
@@ -125,12 +98,40 @@
                         success_div.html('<ol class="breadcrumb"><li class="breadcrumb-item"><a href="#" class="proj-breadcrumb">Proyectos</a></li><li class="breadcrumb-item active">Sectores</li></ol>');
 
                         $.each(data, function(key, value) {
-                            success_div.append('<li><a href="#">' + value.fields['sector'] + '</a></li>');
+                            success_div.append('<li><a class="sector-name" href="#" data-id="' + value.pk + '">' + value.fields['sector'] + '</a></li>');
                         });
                     }
                 });
             });
-        } );
+
+            // WHEN YOU CLICK ON EACH SECTOR TO SWITCH TO PARCELAS
+            card.on('click', '.sector-name', function() {
+                $.ajax({
+                    method: 'GET',
+                    url: '{% url "parcels:ajax_get_parcelas" %}',
+                    data: {
+                        'sector-name': $(this).attr('data-id')
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        var success_div = $('.card .card-header');
+                        success_div.html('');
+                        success_div.html('<ol class="breadcrumb"><li class="breadcrumb-item"><a href="#" class="proj-breadcrumb">Proyectos</a></li><li class="breadcrumb-item"><a href="#" class="sector-breadcrumb">Sectores</a></li><li class="breadcrumb-item">Parcelas</li></ol>');
+
+                        $.each(data, function(key, value) {
+                            success_div.append('<table style="width:100%;">' +
+                                                    '<thead><tr><th></th><th>Polígono</th><th>Parcela</th><th>Propietario</th><th>m2</th></tr></thead>' +
+                                                    '<tbody><tr><td><input class="parcela-google-maps-checkbox" type="checkbox" data-parcela="' + value.fields['numero_parcela'] + '" data-poligono="' + value.fields['poligono'] + '"></td>' +
+                                                               '<td>' + value.fields['poligono'] + '</td>' +
+                                                               '<td>' + value.fields['numero_parcela'] + '</td>' +
+                                                               '<td>' + value.fields['propietario'] + '</td>' +
+                                                               '<td>' + value.fields['metros_cuadrados'] + '</td></tr></tbody>' +
+                                               '</table>');
+                        });
+                    }
+                });
+            });
+        });
 
         function pad (str, max) {
             str = str.toString();
@@ -141,7 +142,7 @@
         var layersForm = [];
         var map;
 
-        $('.parcela-google-maps-checkbox').change(function(){
+        $('.card').on('change', '.parcela-google-maps-checkbox', function(){
             var polig = parseInt($(this).attr('data-poligono'));
             var parc = parseInt($(this).attr('data-parcela'));
             if($(this).is(':checked')) {
@@ -162,6 +163,22 @@
                 } else {
                     layers[parc].setMap(null);
                 }
+            }
+        });
+
+        $('.button-kml-download').click(function() {
+            var polig = $('#inputPoligono');
+            var parc = $('#inputParcela');
+            var inputPolig = polig.val();
+            var inputParc = parc.val();
+            if (inputPolig.length === 0 || inputParc.length === 0) {
+                if (window.confirm('Rellene los inputs de parcela o polígono'))
+                {
+                    inputParc.length === 0 ? parc.focus() : polig.focus()
+                    inputPolig.length === 0 ? polig.focus() : parc.focus()
+                }
+            } else {
+                window.open('https://ovc.catastro.meh.es/Cartografia/WMS/BuscarParcelaGoogle3D.aspx?refcat=03127A'+ pad(inputPolig, 3) + pad(inputParc, 5) + '0000BP&del=3&mun=127&tipo=3d');
             }
         });
 

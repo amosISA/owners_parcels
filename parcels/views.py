@@ -14,7 +14,15 @@ def index(request):
     return render(request,
                   'parcels/index.html',
                   {'parcelas': parcelas,
-                   'proyectos': proyectos});
+                   'proyectos': proyectos})
+
+def ajax_get_parcelas(request):
+    sector = request.GET.get('sector-name', '99999')
+
+    # get sectores that belong to a project
+    query = Parcela.objects.all().filter(sectortrabajo=sector)
+    data = serializers.serialize('json', query)
+    return HttpResponse(data, content_type="application/json")
 
 def ajax_get_sectores(request):
     proyecto = request.GET.get('project_name', '99999')
