@@ -115,19 +115,32 @@
                     dataType: 'json',
                     success: function (data) {
                         var success_div = $('.card .card-header');
+                        var table_rows;
                         success_div.html('');
                         success_div.html('<ol class="breadcrumb"><li class="breadcrumb-item"><a href="#" class="proj-breadcrumb">Proyectos</a></li><li class="breadcrumb-item"><a href="#" class="sector-breadcrumb">Sectores</a></li><li class="breadcrumb-item">Parcelas</li></ol>');
 
                         $.each(data, function(key, value) {
-                            success_div.append('<table style="width:100%;">' +
-                                                    '<thead><tr><th></th><th>Polígono</th><th>Parcela</th><th>Propietario</th><th>m2</th></tr></thead>' +
-                                                    '<tbody><tr><td><input class="parcela-google-maps-checkbox" type="checkbox" data-parcela="' + value.fields['numero_parcela'] + '" data-poligono="' + value.fields['poligono'] + '"></td>' +
-                                                               '<td>' + value.fields['poligono'] + '</td>' +
-                                                               '<td>' + value.fields['numero_parcela'] + '</td>' +
-                                                               '<td>' + value.fields['propietario'] + '</td>' +
-                                                               '<td>' + value.fields['metros_cuadrados'] + '</td></tr></tbody>' +
-                                               '</table>');
+                            if (value.fields['estado'] == 1) {
+                                table_rows += ('<tr class="table-success"><td><input class="parcela-google-maps-checkbox" type="checkbox" data-parcela="' + value.fields['numero_parcela'] + '" data-poligono="' + value.fields['poligono'] + '"></td>' +
+                                               '<td>' + value.fields['poligono'] + '</td>' +
+                                               '<td>' + value.fields['numero_parcela'] + '</td>' +
+                                               '<td>' + value.fields['propietario'] + '</td>' +
+                                               '<td>' + value.fields['metros_cuadrados'] + '</td>' +
+                                           '</tr>');
+                            } else {
+                                table_rows += ('<tr><td><input class="parcela-google-maps-checkbox" type="checkbox" data-parcela="' + value.fields['numero_parcela'] + '" data-poligono="' + value.fields['poligono'] + '"></td>' +
+                                               '<td>' + value.fields['poligono'] + '</td>' +
+                                               '<td>' + value.fields['numero_parcela'] + '</td>' +
+                                               '<td>' + value.fields['propietario'] + '</td>' +
+                                               '<td>' + value.fields['metros_cuadrados'] + '</td>' +
+                                           '</tr>');
+                            }
                         });
+                        success_div.append('<table class="table table-sm" style="width:100%;font-size:0.8rem;">' +
+                                                '<thead><tr><th></th><th>Polígono</th><th>Parcela</th><th>Propietario</th><th>m2</th></tr></thead>' +
+                                                '<tbody>' + table_rows + '</tbody>' +
+                                           '</table>'
+                        );
                     }
                 });
             });

@@ -21,7 +21,8 @@ def ajax_get_parcelas(request):
 
     # get sectores that belong to a project
     query = Parcela.objects.all().filter(sectortrabajo=sector)
-    data = serializers.serialize('json', query)
+    data = serializers.serialize('json', query, indent=2,
+                                 use_natural_foreign_keys=True, use_natural_primary_keys=True)
     return HttpResponse(data, content_type="application/json")
 
 def ajax_get_sectores(request):

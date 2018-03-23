@@ -23,6 +23,9 @@ class Propietario(models.Model):
     def __unicode__(self):
         return '{}, {}'.format(self.apellidos, self.nombre)
 
+    def natural_key(self):
+        return '{}, {}'.format(self.apellidos, self.nombre)
+
 class Estado(models.Model):
     nombre = models.CharField(max_length=250, blank=False)
 
