@@ -154,6 +154,23 @@
                             var polig = parseInt($(this).attr('data-poligono'));
                             var parc = parseInt($(this).attr('data-parcela'));
 
+                            /*$.ajax({
+                                method: 'GET',
+                                url: 'https://ovc.catastro.meh.es/Cartografia/WMS/BuscarParcelaGoogle3D.aspx?refcat=03127A'+ pad(polig, 3) + pad(parc, 5) + '0000BP&del=3&mun=127&tipo=3d',
+                                success: function (data) {
+                                    $(data).find('Style[id="Subparcela"]').each(function() {
+                                        var $subparcela = $(this);
+                                        var fill = data.createElement("fill"), outline = data.createElement("outline");
+                                        fill.innerHTML = '1';
+                                        outline.innerHTML = '1';
+                                        $subparcela.find('PolyStyle').append(fill);
+                                        $subparcela.find('PolyStyle').append(outline);
+                                        $subparcela.find('PolyStyle > color').text('7FAAAAAA');
+                                        console.log(this);
+                                    });
+                                }
+                            });*/
+
                             layers[parc] = new google.maps.KmlLayer({
                                 url: 'https://ovc.catastro.meh.es/Cartografia/WMS/BuscarParcelaGoogle3D.aspx?refcat=03127A'+ pad(polig, 3) + pad(parc, 5) + '0000BP&del=3&mun=127&tipo=3d',
                                 suppressInfoWindows: false
