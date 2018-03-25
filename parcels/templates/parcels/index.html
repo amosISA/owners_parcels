@@ -142,6 +142,13 @@
                                            '</table>'
                         );
 
+                        // First we set to null each kml
+                        $.each(layers, function(i,v){
+                            if (v instanceof Object) {
+                                layers[i].setMap(null);
+                            }
+                        });
+
                         // Now print all checkboxes with their kml
                         $('.parcela-google-maps-checkbox').each(function() {
                             var polig = parseInt($(this).attr('data-poligono'));
