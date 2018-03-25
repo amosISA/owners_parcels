@@ -50,11 +50,11 @@
 {% block js %}
     <script>
         $(document).ready(function() {
-            $('#tabla_parcelas').DataTable({
+            /*$('#tabla_parcelas').DataTable({
                 "language": {
                     url: "/static/parcels/location/es_ES.json"
                 }
-            });
+            });*/
 
             /****** AJAX FOR RIGHT SIDE *****/
             // If i dont do it by on, this wont work, the on is for future elements,
@@ -115,20 +115,20 @@
                     dataType: 'json',
                     success: function (data) {
                         var success_div = $('.card .card-header');
-                        var table_rows;
+                        var table_rows = '';
                         success_div.html('');
                         success_div.html('<ol class="breadcrumb"><li class="breadcrumb-item"><a href="#" class="proj-breadcrumb">Proyectos</a></li><li class="breadcrumb-item"><a href="#" class="sector-breadcrumb">Sectores</a></li><li class="breadcrumb-item">Parcelas</li></ol>');
 
                         $.each(data, function(key, value) {
                             if (value.fields['estado'] == 1) {
-                                table_rows += ('<tr class="table-success"><td><input class="parcela-google-maps-checkbox" type="checkbox" data-parcela="' + value.fields['numero_parcela'] + '" data-poligono="' + value.fields['poligono'] + '"></td>' +
+                                table_rows += ('<tr class="table-success"><td><input checked class="parcela-google-maps-checkbox" type="checkbox" data-parcela="' + value.fields['numero_parcela'] + '" data-poligono="' + value.fields['poligono'] + '"></td>' +
                                                '<td>' + value.fields['poligono'] + '</td>' +
                                                '<td>' + value.fields['numero_parcela'] + '</td>' +
                                                '<td>' + value.fields['propietario'] + '</td>' +
                                                '<td>' + value.fields['metros_cuadrados'] + '</td>' +
                                            '</tr>');
                             } else {
-                                table_rows += ('<tr><td><input class="parcela-google-maps-checkbox" type="checkbox" data-parcela="' + value.fields['numero_parcela'] + '" data-poligono="' + value.fields['poligono'] + '"></td>' +
+                                table_rows += ('<tr><td><input checked class="parcela-google-maps-checkbox" type="checkbox" data-parcela="' + value.fields['numero_parcela'] + '" data-poligono="' + value.fields['poligono'] + '"></td>' +
                                                '<td>' + value.fields['poligono'] + '</td>' +
                                                '<td>' + value.fields['numero_parcela'] + '</td>' +
                                                '<td>' + value.fields['propietario'] + '</td>' +
@@ -141,6 +141,20 @@
                                                 '<tbody>' + table_rows + '</tbody>' +
                                            '</table>'
                         );
+
+                        // Now print all checkboxes with their kml
+                        $('.parcela-google-maps-checkbox').each(function() {
+                            var polig = parseInt($(this).attr('data-poligono'));
+                            var parc = parseInt($(this).attr('data-parcela'));
+
+                            layers[parc] = new google.maps.KmlLayer({
+                                url: 'https://ovc.catastro.meh.es/Cartografia/WMS/BuscarParcelaGoogle3D.aspx?refcat=03127A'+ pad(polig, 3) + pad(parc, 5) + '0000BP&del=3&mun=127&tipo=3d',
+                                suppressInfoWindows: false
+                                //preserveViewport: true
+                            });
+
+                            layers[parc].setMap(map);
+                        });
                     }
                 });
             });

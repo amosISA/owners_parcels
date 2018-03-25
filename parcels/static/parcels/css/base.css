@@ -29,6 +29,8 @@ body {
     body .card .card-header {
       height: 480px;
       overflow: auto; }
+      body .card .card-header li {
+        list-style-type: none; }
   body .row-button-download {
     padding-right: 0; }
     body .row-button-download button {

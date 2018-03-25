@@ -52,6 +52,10 @@ body {
     .card-header {
       height: 480px;
       overflow: auto;
+
+      li {
+        list-style-type: none;
+      }
     }
   }
 
