@@ -1,0 +1,67 @@
+/*** Body ***/
+/************/
+body {
+  font: {
+    size: 0.8rem;
+  }
+
+  .parcels_webapp_container {
+    margin: {
+      top: 10px;
+      bottom: 20px;
+    }
+  }
+
+  #map_canvas {
+    width:640px;
+    height: 480px;
+  }
+
+  .form-check-parcel {
+    margin: {
+      top: 10px;
+      bottom: 10px;
+      left: 3px;
+    }
+
+    font: {
+      size: 0.8rem;
+    }
+
+    .form-parcel-input {
+      margin: { right:5px; }
+      label {
+        display: block;
+        margin: { bottom: 0; }
+      }
+    }
+  }
+
+  .card {
+    font-size: 0.8rem!important;
+
+    ul {
+      margin: 0;
+      padding: 0;
+      li {
+        list-style-type: none;
+        text-align: left;
+      }
+    }
+
+    .card-header {
+      height: 480px;
+      overflow: auto;
+
+      li {
+        list-style-type: none;
+      }
+    }
+  }
+
+  // Button download KML
+  .row-button-download {
+    padding-right: 0;
+    button {float: right;}
+  }
+}
