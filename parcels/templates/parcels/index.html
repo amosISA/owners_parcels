@@ -3,11 +3,17 @@
 
 {% block content %}
 
+<!-- MAP -->
 <div id="map_canvas">
 </div>
+
+<!-- PANEL ACTIONS COLLAPSE -->
 <div class="actions_parcels">
 
     <button class="accordion_for_card btn" data-toggle="collapse" data-target="#card">+</button>
+    <!-- GEOLOCATION -->
+    <img id="preloader" src="{% static 'parcels/location/gps.png' %}">
+
     <div class="card collapse" id="card">
         <!-- Check parcel and download KML -->
         <div class="form-check-parcel">
@@ -265,5 +271,67 @@
         }
 
         google.maps.event.addDomListener(window, 'load', initialize);
+
+
+        ////////////////////////
+        ///// GEOLOCATION /////
+        ///////////////////////
+        function locError(error) {
+            // the current position could not be located
+            alert("The current position could not be found!");
+        }
+
+        function setCurrentPosition(pos) {
+            currentPositionMarker = new google.maps.Marker({
+                map: map,
+                position: new google.maps.LatLng(
+                    pos.coords.latitude,
+                    pos.coords.longitude
+                ),
+                title: "Current Position"
+            });
+            map.panTo(new google.maps.LatLng(
+                    pos.coords.latitude,
+                    pos.coords.longitude
+                ));
+        }
+
+        function displayAndWatch(position) {
+            // set current position
+            setCurrentPosition(position);
+            // watch position
+            watchCurrentPosition();
+        }
+
+        function watchCurrentPosition() {
+            var positionTimer = navigator.geolocation.watchPosition(
+                function (position) {
+                    setMarkerPosition(
+                        currentPositionMarker,
+                        position
+                    );
+                });
+        }
+
+        function setMarkerPosition(marker, position) {
+            marker.setPosition(
+                new google.maps.LatLng(
+                    position.coords.latitude,
+                    position.coords.longitude)
+            );
+        }
+
+        function initLocationProcedure() {
+            initialize();
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(displayAndWatch, locError);
+            } else {
+                alert("Your browser does not support the Geolocation API");
+            }
+        }
+
+        $('#preloader').click(function() {
+            initLocationProcedure();
+        });
     </script>
 {% endblock %}
