@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 from django.contrib import admin
 
 from .models import Parcela, Propietario, SectorTrabajo, Estado, Proyecto
+from .sites import my_admin_site
 
 # Register your models here.
 class ParcelaAdmin(admin.ModelAdmin):
@@ -14,6 +15,7 @@ class ParcelaAdmin(admin.ModelAdmin):
                      'numero_parcela',)
     empty_value_display = '-'
     show_full_result_count = True
+my_admin_site.register(Parcela, ParcelaAdmin)
 admin.site.register(Parcela, ParcelaAdmin)
 
 class PropietarioAdmin(admin.ModelAdmin):

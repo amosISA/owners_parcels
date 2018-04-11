@@ -20,7 +20,9 @@ def ajax_get_parcelas(request):
     sector = request.GET.get('sector-name', '99999')
 
     # get sectores that belong to a project
-    query = Parcela.objects.all().filter(sectortrabajo=sector)
+    # antes de cambiarlo a manytomany en parcelas para sectores, estaba así sin quitar el manytomany en sectores
+    # query = Parcela.objects.all().filter(sectortrabajo=sector)
+    query = Parcela.objects.all().filter(sector_trabajo=sector)
     data = serializers.serialize('json', query, indent=2,
                                  use_natural_foreign_keys=True, use_natural_primary_keys=True)
     return HttpResponse(data, content_type="application/json")

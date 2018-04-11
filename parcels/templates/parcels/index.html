@@ -1,50 +1,52 @@
 {% extends "parcels/base.html" %}
+{% load staticfiles %}
 
 {% block content %}
 
-<div class="row form-check-parcel">
-    <div class="form-parcel-input">
-        <label for="inputPoligono">Polígono</label>
-        <input type="text" id="inputPoligono">
-    </div>
-    <div class="form-parcel-input">
-        <label for="inputParcela">Parcela</label>
-        <input type="text" id="inputParcela">
-    </div>
-    <div class="form-parcel-input">
-        <label style="color:#fff;">.</label>
-        <button class="formButtonCheckParcela">Comprobar</button>
-    </div>
+<div id="map_canvas">
 </div>
+<div class="actions_parcels">
 
-<div class="row">
-    <div class="col-md-9" id="map_canvas">
-    </div>
-    <div class="col-md-3">
-        <div class="card">
-            <div class="card-header">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item active">Proyectos</li>
-                </ol>
-                <ul>
-                    {% for proyecto in proyectos %}
-                        <li>
-                            <a class="project-name" data-id="{{ proyecto.id }}" href="#">
-                                - {{ proyecto.nombre }}
-                            </a>
-                        </li>
-                    {% endfor %}
-                </ul>
-            </div>
+    <button class="accordion_for_card btn" data-toggle="collapse" data-target="#card">+</button>
+    <div class="card collapse" id="card">
+        <!-- Check parcel and download KML -->
+        <div class="form-check-parcel">
+            <label for="inputPoligono">Polígono</label>
+            <input type="text" id="inputPoligono">
+            <label for="inputParcela">Parcela</label>
+            <input type="text" id="inputParcela">
+            <button class="formButtonCheckParcela">Comprobar</button>
+        </div>
+
+        <!-- Table with projects, sectors and parcels -->
+        <div class="card-header">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item active">Proyectos</li>
+            </ol>
+            <ul>
+                {% for proyecto in proyectos %}
+                    <li>
+                        <a class="project-name" data-id="{{ proyecto.id }}" href="#">
+                            - {{ proyecto.nombre }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <!-- ADD PROJECTS, SECTORS AND PARCELS -->
+        <div class="add_new_data">
+            <!-- ADD PARCELS -->
+            <button class="button-add-parcel">
+                <a class="related-widget-wrapper-link add-related" id="add_id_diputacion" href="/panel/parcels/parcela/add/?_to_field=id&amp;_popup=1" title="Añadir parcela" style="display: block;" target="_blank">
+                    Añadir parcela
+                </a>
+            </button>
+            <button class="button-kml-download">Descargar KML</button>
         </div>
     </div>
 </div>
 
-<div class="row">
-    <div class="col-md-9 row-button-download">
-        <button class="button-kml-download">Descargar KML</button>
-    </div>
-</div>
 {% endblock %}
 
 {% block js %}
