@@ -10,18 +10,30 @@ body {
     position: absolute;
     z-index: 200; }
   body .actions_parcels {
-    left: 1050px;
-    top: 20px;
     position: absolute;
     z-index: 300;
+    left: 30px;
+    top: 50px;
     /*** GEOLOCATIONS ***/
     /********************/ }
     body .actions_parcels .accordion_for_card {
-      display: inline-block; }
-    body .actions_parcels #preloader {
       display: inline-block;
+      color: #fff !important;
+      background-color: #42abe5 !important;
+      font-size: 14px !important;
+      border: none;
+      padding: 8px 16px;
+      vertical-align: middle;
+      overflow: hidden;
+      text-decoration: none;
+      text-align: center;
+      cursor: pointer;
+      white-space: nowrap;
+      border-radius: 50%; }
+    body .actions_parcels #preloader {
+      display: block;
       width: 50px;
-      height: 50px;
+      height: 35px;
       cursor: pointer; }
     body .actions_parcels #card {
       display: inline-block;
